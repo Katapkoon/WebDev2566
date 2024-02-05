@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+    <head></head>
+    <body>
+        <div id="maincontainer"></div>
+        <script>
+            const mainContainer = document.getElementById('maincontainer');
+
+            const title = document.createElement('h1');
+            title.innerText = `Exercise 04: Javascript&DOM`;
+            mainContainer.appendChild(title);
+
+            const btn = document.createElement('button');
+            btn.setAttribute('id', 'button')
+            btn.innerText = `Click me to display Date and Time`;
+            mainContainer.appendChild(btn);
+
+            const btn2 = document.createElement('button');
+            btn2.setAttribute('id', 'button2');
+            btn2.innerText = `yay`;
+            mainContainer.appendChild(btn2);
+
+            document.getElementById('button2').addEventListener('click', () => {
+                if (document.body.style.background == "green") {
+                    document.body.style.background = "blue";
+                }
+                else {
+                    document.body.style.background = "green";
+                }
+            });
+            
+
+            var w;
+            if (typeof(w) == "undefined") {
+                w = new Worker("worker.js");
+            }
+            
+            document.getElementById('button').addEventListener('click', () => {
+                w.postMessage('ButtonClicked');
+            });
+            
+            w.onmessage = function(message) {
+                // document.getElementById('button').disabled = true;
+                // console.log(message.data);
+                btn.style.position = 'fixed';
+                btn.style.top = '0';
+                btn.style.right = '0';
+                btn.innerText = message.data;
+                mainContainer.appendChild(b);
+                
+            };
+            
+            
+        </script>
+    </body>
+</html>
