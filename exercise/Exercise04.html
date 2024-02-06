@@ -6,49 +6,133 @@
         <script>
             const mainContainer = document.getElementById('maincontainer');
 
-            const title = document.createElement('h1');
+            const title = document.createElement('h2');
             title.innerText = `Exercise 04: Javascript&DOM`;
             mainContainer.appendChild(title);
 
+            const div1 = document.createElement("div");
+            div1.setAttribute('id', 'placeHolder');
+            div1.style.width = "auto"; // Set the width
+            div1.style.height = "100px"; // Set the height
+
+            mainContainer.appendChild(div1);
+
             const btn = document.createElement('button');
             btn.setAttribute('id', 'button')
+            btn.style.flex = 'none';
             btn.innerText = `Click me to display Date and Time`;
-            mainContainer.appendChild(btn);
+            document.getElementById('placeHolder').appendChild(btn);
 
-            const btn2 = document.createElement('button');
-            btn2.setAttribute('id', 'button2');
-            btn2.innerText = `yay`;
-            mainContainer.appendChild(btn2);
+            // const btn2 = document.createElement('button');
+            // btn2.setAttribute('id', 'button2');
+            // btn2.innerText = `yay`;
+            // mainContainer.appendChild(btn2);
+            const div2 = document.createElement("div");
+            div2.setAttribute('id', 'personal-info');
+            mainContainer.appendChild(div2);
 
-            document.getElementById('button2').addEventListener('click', () => {
-                if (document.body.style.background == "green") {
-                    document.body.style.background = "blue";
+            const a1 = document.createElement('a');
+            a1.setAttribute('id','show-info')
+            a1.href = '';
+            a1.innerText = "Personal Info";
+            // a1.style.backgroundColor = 'yellow';
+            document.getElementById("personal-info").appendChild(a1)
+            
+            const defaultBackgroundColor = window.getComputedStyle(a1).backgroundColor;
+
+            document.getElementById('show-info').addEventListener('mouseover', () => {
+                document.getElementById('show-info').style.backgroundColor = 'yellow';
+            })
+            document.getElementById('show-info').addEventListener('mouseout', () => {
+                document.getElementById('show-info').style.backgroundColor = defaultBackgroundColor;
+            })
+
+            document.getElementById('show-info').addEventListener('click', (event) => {
+                event.preventDefault();
+
+                if (document.getElementById('my-info').style.display === 'none') {
+                    document.getElementById('my-info').style.display = 'block'; // Show the text
+                } else {
+                    document.getElementById('my-info').style.display = 'none'; // Hide the text
                 }
-                else {
-                    document.body.style.background = "green";
-                }
-            });
+            })
+            const myInfo = document.createElement('ul');
+            myInfo.setAttribute('id', 'my-info');
+            myInfo.style.display = 'none';
+            document.getElementById("personal-info").appendChild(myInfo);
+
+            const fullName = document.createElement('li');
+            fullName.innerText = `Katapat Koonthamstit, ID: 65010101`;
+            document.getElementById("my-info").appendChild(fullName);
+            const subject = document.createElement('li');
+            subject.innerText = `Subject: Web Application Development`;
+            document.getElementById("my-info").appendChild(subject);
+            const semester = document.createElement('li');
+            semester.innerText = `Semester: เทอม 2, ปีการศึกษา 2566`;
+            document.getElementById("my-info").appendChild(semester);
+
+            const title2 = document.createElement('h1');
+            title2.innerText = `Snapshots`;
+            mainContainer.appendChild(title2);
+
+            const title3 = document.createElement('h1');
+            
+            title3.innerText = `adshgashasdh`;
+            mainContainer.appendChild(title3);
+
+            // document.getElementById('button2').addEventListener('click', () => {
+            //     if (document.body.style.background == "green") {
+            //         document.body.style.background = "blue";
+            //     }
+            //     else {
+            //         document.body.style.background = "green";
+            //     }
+            // });
             
 
             var w;
-            if (typeof(w) == "undefined") {
+            // if (typeof(w) == "undefined") {
+            //     w = new Worker("worker.js");
+            // }
+            let i = 0;
+            var pressed = false;
+            document.getElementById('button').addEventListener('click', (event) => {
+                console.log(typeof(w));
+                if (typeof(w) == 'undefined') {
                 w = new Worker("worker.js");
             }
-            
-            document.getElementById('button').addEventListener('click', () => {
-                w.postMessage('ButtonClicked');
-            });
-            
-            w.onmessage = function(message) {
+                if (!pressed) {
+                    w.postMessage(['ButtonClicked',i]);
+                    pressed = true;
+                } else {
+                    w.postMessage('Btn');
+                }
+                w.onmessage = function(message) {
                 // document.getElementById('button').disabled = true;
                 // console.log(message.data);
-                btn.style.position = 'fixed';
-                btn.style.top = '0';
-                btn.style.right = '0';
-                btn.innerText = message.data;
-                mainContainer.appendChild(b);
+                if (message.data == 'Reset') {
+                    btn.style.position = '';
+                    btn.style.top = '';
+                    btn.style.right = '';
+                    w.terminate();
+                    w = undefined;
+                    pressed = false;
+                } else {
+                    i = message.data[3] + 1;
+                    btn.style.position = 'fixed';
+                    btn.style.top = '0';
+                    btn.style.right = '0';
+                    btn.style.backgroundColor = message.data[1];
+                    btn.style.color = message.data[2];
+                    btn.innerText = message.data[0];
+                    
+                }
+                
                 
             };
+            });
+            
+            
             
             
         </script>
