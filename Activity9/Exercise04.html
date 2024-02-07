@@ -56,29 +56,81 @@
                     document.getElementById('my-info').style.display = 'none'; // Hide the text
                 }
             })
+
+            let infoList = [`Katapat Koonthamstit, ID: 65010101`, 
+                            `Subject: Web Application Development`,
+                            `Semester: เทอม 2, ปีการศึกษา 2566` ];
+
             const myInfo = document.createElement('ul');
             myInfo.setAttribute('id', 'my-info');
             myInfo.style.display = 'none';
             document.getElementById("personal-info").appendChild(myInfo);
+            
+            infoList.forEach(function (item) {
+                const li = document.createElement('li');
+                li.innerText = item;
+                document.getElementById("my-info").appendChild(li);
+            })
+            
+            // const fullName = document.createElement('li');
+            // fullName.innerText = `Katapat Koonthamstit, ID: 65010101`;
+            // document.getElementById("my-info").appendChild(fullName);
+            // const subject = document.createElement('li');
+            // subject.innerText = `Subject: Web Application Development`;
+            // document.getElementById("my-info").appendChild(subject);
+            // const semester = document.createElement('li');
+            // semester.innerText = `Semester: เทอม 2, ปีการศึกษา 2566`;
+            // document.getElementById("my-info").appendChild(semester);
 
-            const fullName = document.createElement('li');
-            fullName.innerText = `Katapat Koonthamstit, ID: 65010101`;
-            document.getElementById("my-info").appendChild(fullName);
-            const subject = document.createElement('li');
-            subject.innerText = `Subject: Web Application Development`;
-            document.getElementById("my-info").appendChild(subject);
-            const semester = document.createElement('li');
-            semester.innerText = `Semester: เทอม 2, ปีการศึกษา 2566`;
-            document.getElementById("my-info").appendChild(semester);
+            const div3 = document.createElement('div');
+            div3.setAttribute('id', 'snapshots');
+            mainContainer.appendChild(div3);
 
             const title2 = document.createElement('h1');
             title2.innerText = `Snapshots`;
-            mainContainer.appendChild(title2);
+            document.getElementById('snapshots').appendChild(title2);
 
-            const title3 = document.createElement('h1');
-            
-            title3.innerText = `adshgashasdh`;
-            mainContainer.appendChild(title3);
+            const snapshotsList = document.createElement('ul');
+            snapshotsList.setAttribute('id','snaplist');
+            document.getElementById('snapshots').appendChild(snapshotsList);
+
+            let snapshots = [["Fireworks","https://i.ibb.co/TwMyvpM/Fireworks-i-Stock.jpg","fireworks"],
+                             ["Crest","https://i.ibb.co/16PrQt8/England-logo.png","crest"],
+                             ["Action","https://i.ibb.co/XWbxCLd/Marcus-Thames-Tigers-2007.jpg","action"],
+                             ["Buffalo","https://i.ibb.co/qMkGBvN/African-buffalo-Syncerus-caffer-caffer-male-with-cattle-egret.jpg","buffalo"]]
+
+            snapshots.forEach(function (item) {
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.setAttribute('id',`show-${item[0]}`)
+                a.href = '';
+                a.innerText = item[0];
+
+                const img = document.createElement('img')
+                img.src = item[1];
+                img.setAttribute('id',item[2])
+                img.style.display = 'none';
+                img.style.width = '500px';
+                img.style.height = '500px';
+                img.style.objectFit = 'cover'
+                // img.style.display = 'none';
+                a.addEventListener('click', (event) => {
+                    event.preventDefault();
+
+
+                    document.querySelectorAll('#snapshots img').forEach(function (item) {
+                        item.style.display = 'none';
+                    })
+                    document.getElementById(item[2]).style.display = 'block';
+                })
+                
+                li.appendChild(a)
+                document.getElementById('snapshots').appendChild(img)
+                document.getElementById('snaplist').appendChild(li);
+
+            })
+
+            console.log(document.querySelectorAll('#snaplist a'))
 
             // document.getElementById('button2').addEventListener('click', () => {
             //     if (document.body.style.background == "green") {
@@ -89,12 +141,27 @@
             //     }
             // });
             
-
+            var colorsBack = [
+                "#c327b7",
+                "#fb8e3a",
+                "#0c6c3e",
+                "#e14428",
+                "#834f6a",
+                "#2285d0"
+            ];
+            var colorsText = [
+                "#a57b30",
+                "#4d579b",
+                "#be7e22",
+                "#3e915c",
+                "#ca4826",
+                "#5a3071"
+            ];
             var w;
             // if (typeof(w) == "undefined") {
             //     w = new Worker("worker.js");
             // }
-            let i = 0;
+            let i;
             var pressed = false;
             document.getElementById('button').addEventListener('click', (event) => {
                 console.log(typeof(w));
@@ -102,7 +169,7 @@
                 w = new Worker("worker.js");
             }
                 if (!pressed) {
-                    w.postMessage(['ButtonClicked',i]);
+                    w.postMessage('ButtonClicked');
                     pressed = true;
                 } else {
                     w.postMessage('Btn');
@@ -110,27 +177,29 @@
                 w.onmessage = function(message) {
                 // document.getElementById('button').disabled = true;
                 // console.log(message.data);
-                if (message.data == 'Reset') {
-                    btn.style.position = '';
-                    btn.style.top = '';
-                    btn.style.right = '';
-                    w.terminate();
-                    w = undefined;
-                    pressed = false;
-                } else {
-                    i = message.data[3] + 1;
-                    btn.style.position = 'fixed';
-                    btn.style.top = '0';
-                    btn.style.right = '0';
-                    btn.style.backgroundColor = message.data[1];
-                    btn.style.color = message.data[2];
-                    btn.innerText = message.data[0];
-                    
+                    if (message.data == 'Reset') {
+                        btn.style.position = '';
+                        btn.style.top = '';
+                        btn.style.right = '';
+                        w.terminate();
+                        w = undefined;
+                        pressed = false;
+
+                    } else {
+                        i = message.data[1] % 6
+                        btn.style.position = 'fixed';
+                        btn.style.top = '0';
+                        btn.style.right = '0';
+                        btn.style.backgroundColor = colorsBack[i];
+                        btn.style.color = colorsText[i];
+                        btn.innerText = message.data[0];
+                        console.log(i)
+
+                    }
+ 
                 }
-                
-                
-            };
-            });
+            }
+            );
             
             
             
